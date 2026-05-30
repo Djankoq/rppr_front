@@ -107,6 +107,8 @@ const AuthPage: React.FC<AuthPageProps> = ({ initialIsLogin }) => {
   return (
     <div className={styles.authPage}>
       <div className={styles.authCard}>
+        <Link to="/" className={styles.closeLink} aria-label="Вернуться на главную страницу" />
+
         <h2 className={styles.title}>{isLogin ? 'Авторизация' : 'Регистрация'}</h2>
 
         <form className={styles.authForm} onSubmit={handleSubmit} noValidate>
@@ -190,9 +192,6 @@ const AuthPage: React.FC<AuthPageProps> = ({ initialIsLogin }) => {
           </Link>
         </p>
 
-        <Link to="/" className={styles.homeLink}>
-          Вернуться на главную
-        </Link>
       </div>
     </div>
   );
