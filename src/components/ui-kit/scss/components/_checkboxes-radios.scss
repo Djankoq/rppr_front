@@ -1,3 +1,6 @@
+@use "sass:math";
+@use '../variables' as *;
+
 .form-group {
     margin-bottom: $spacing-sm;
     display: flex;
@@ -6,5 +9,5 @@
 
 .checkbox,
 .radio {
-    margin-right: $spacing-sm / 2;
+    margin-right: math.div($spacing-sm, 2);
 }

@@ -16,7 +16,7 @@ export interface AuthContextValue {
   user: AuthUser | null
   isAuthenticated: boolean
   isLoading: boolean
-  login: (login: string, password: string, profile?: User) => Promise<void>
+  login: (login: string, password: string) => Promise<void>
   register: (data: UserCreate) => Promise<User>
   logout: () => void
 }
@@ -66,30 +66,38 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const login = useCallback(
-    async (loginName: string, password: string, profile?: User) => {
-      const { access_token } = await authApi.login(loginName, password)
-      setAccessToken(access_token)
+    async (loginName: string, password: string) => {
+      // API возвращает все необходимые данные
+      const { access_token, first_name, last_name } = await authApi.login(loginName, password);
+      setAccessToken(access_token);
 
-      const id = getUserIdFromToken(access_token)
-      if (id == null && !profile) {
-        throw new Error('Не удалось прочитать id пользователя из токена')
+      const id = getUserIdFromToken(access_token);
+      if (id == null) {
+        throw new Error('Не удалось прочитать id пользователя из токена');
       }
 
-      // After login API does not return profile; pass profile from register when available.
-      const authUser: AuthUser = profile ?? {
-        id: id!,
+      const authUser: AuthUser = {
         login: loginName,
-        is_manager: false,
-      }
-      saveUser(authUser)
-      setUser(authUser)
+        first_name: first_name,
+        last_name: last_name,
+        is_manager: false, // Предполагаем, что API вернет это поле, если оно нужно
+      };
+      
+      saveUser(authUser);
+      setUser(authUser);
     },
     [],
   )
 
   const register = useCallback(async (data: UserCreate) => {
-    return authApi.register(data)
-  }, [])
+    // После регистрации API возвращает созданного пользователя
+    const newUser = await authApi.register(data);
+    // Сразу логинимся, чтобы получить токен и полное имя
+    if (data.password) {
+      await login(newUser.login, data.password);
+    }
+    return newUser;
+  }, [login])
 
   const value = useMemo<AuthContextValue>(
     () => ({

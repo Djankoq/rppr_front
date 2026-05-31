@@ -1,0 +1,57 @@
+.mainLayout {
+  background-color: #F7FBFE;
+  min-height: 100vh;
+}
+
+.header {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.brand {
+  font-family: 'Inter', sans-serif;
+  font-size: 24px;
+  font-weight: bold;
+  color: #4D89AE;
+  text-decoration: none;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.navLink, .userName {
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
+  color: #4D89AE;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.navLink:hover {
+  text-decoration: underline;
+}
+
+.content {
+  /* Убираем ограничение ширины, так как страница отелей должна быть широкой */
+  max-width: 1920px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.separator {
+  border: 1px solid #9ACEEB;
+  /* Небольшой наклон, как в макете */
+  transform: rotate(-0.06deg);
+  margin: 0;
+}

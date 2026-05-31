@@ -1,3 +1,6 @@
+@use "sass:color";
+@use '../variables' as *;
+
 .btn {
     border: none;
     padding: $spacing-sm $spacing-md;
@@ -11,11 +14,11 @@
         color: white;
 
         &:hover {
-            background-color: darken($primary-color, 10%);
+            background-color: color.adjust($primary-color, $lightness: -10%);
         }
 
         &:active {
-            background-color: darken($primary-color, 20%);
+            background-color: color.adjust($primary-color, $lightness: -20%);
         }
     }
 
@@ -24,11 +27,11 @@
         color: white;
 
         &:hover {
-            background-color: darken($secondary-color, 10%);
+            background-color: color.adjust($secondary-color, $lightness: -10%);
         }
 
         &:active {
-            background-color: darken($secondary-color, 20%);
+            background-color: color.adjust($secondary-color, $lightness: -20%);
         }
     }
 

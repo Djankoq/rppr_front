@@ -1,0 +1,185 @@
+.authPage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #F7FBFE;
+  padding: 20px;
+}
+
+.authCard {
+  box-sizing: border-box;
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  padding: 40px 80px;
+  background: #FFFFFF;
+  border: 2px solid #9ACEEB;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.title {
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  color: #2F353B;
+  margin-bottom: 20px;
+}
+
+.authForm {
+  width: 100%;
+  min-width: 0;
+}
+
+.closeLink {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.closeLink::before,
+.closeLink::after {
+  content: '';
+  position: absolute;
+  left: 1.56%;
+  right: 1.56%;
+  top: 50%;
+  height: 2px;
+  background: #2F353B;
+  transform-origin: center;
+}
+
+.closeLink::before {
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.closeLink::after {
+  transform: translateY(-50%) rotate(-45deg);
+}
+
+.closeLink:hover::before,
+.closeLink:hover::after {
+  background: #4D89AE;
+}
+
+.inputGroup {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.inputField {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  border: none;
+  border-bottom: 1px solid #9ACEEB;
+  padding: 8px 0;
+  background-color: transparent;
+  font-size: 14px;
+  outline: none;
+}
+
+.inputField::placeholder {
+  color: #6F7A83;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+}
+
+.inputField:focus {
+  border-bottom-color: #4D89AE;
+}
+
+.errorContainer {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  height: 36px;
+  font-size: 12px;
+  line-height: 16px;
+  color: red;
+  text-align: center;
+  margin: 0 0 10px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.submitButton {
+  width: 100%;
+  height: 40px;
+  background: #9ACEEB;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: #2F353B;
+  /* Убираем верхний отступ, так как он теперь у контейнера ошибки */
+  margin-top: 0;
+  transition: background-color 0.3s;
+}
+
+.submitButton:hover {
+  background: #6FAFD6;
+}
+
+.switchLink {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: #000000;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.switchLink a {
+  color: #4D89AE;
+  text-decoration: none;
+}
+
+.switchLink a:hover {
+  text-decoration: underline;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .authCard {
+    padding: 30px 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .authCard {
+    padding: 20px;
+    border: 1px solid #9ACEEB;
+  }
+
+  .title {
+    font-size: 14px;
+  }
+
+  .submitButton {
+    font-size: 12px;
+  }
+
+  .switchLink {
+    font-size: 12px;
+  }
+}

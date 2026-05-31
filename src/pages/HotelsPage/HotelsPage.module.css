@@ -1,0 +1,125 @@
+.hotelsPage {
+  padding: 20px;
+  background-color: #F7FBFE;
+}
+
+.searchBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  padding: 20px;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #9ACEEB;
+  align-items: center;
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1 1 200px;
+}
+
+.searchInput {
+  width: 100%;
+  box-sizing: border-box;
+  height: 40px;
+  background: #F7FBFE;
+  border: 1px solid #9ACEEB;
+  border-radius: 5px;
+  padding: 0 30px 0 15px; /* Оставляем место для крестика */
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  color: #6F7A83;
+}
+
+.searchInput::placeholder {
+  color: #6F7A83;
+}
+
+.clearInputButton {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #9ACEEB;
+  font-size: 24px;
+  line-height: 1;
+  padding: 0;
+}
+.clearInputButton:hover {
+  color: #6F7A83;
+}
+
+.searchButton {
+  height: 40px;
+  padding: 0 20px;
+  background: #9ACEEB;
+  border: 1px solid #9ACEEB;
+  border-radius: 5px;
+  font-family: 'Inter', sans-serif;
+  font-size: 18px;
+  color: #000000;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  flex-shrink: 0;
+}
+
+.searchButton:hover {
+  background-color: #6FAFD6;
+}
+
+.clearAllButton {
+  height: 40px;
+  padding: 0 20px;
+  background: transparent;
+  border: 1px solid #6F7A83;
+  color: #6F7A83;
+  border-radius: 5px;
+  font-family: 'Inter', sans-serif;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s;
+  flex-shrink: 0;
+}
+
+.clearAllButton:hover:not(:disabled) {
+  background-color: #6F7A83;
+  color: #FFFFFF;
+}
+
+.clearAllButton:disabled {
+  border-color: #e0e0e0;
+  color: #cccccc;
+  cursor: not-allowed;
+  background-color: transparent; /* Убедимся, что фон не меняется */
+}
+
+.filterError {
+  min-height: 18px;
+  margin: -20px 20px 20px;
+  color: red;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+}
+
+.hotelGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 30px;
+  padding: 0 20px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 40px;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  color: #2F353B;
+}

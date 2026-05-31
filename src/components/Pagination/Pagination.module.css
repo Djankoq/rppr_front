@@ -1,0 +1,48 @@
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 40px;
+  font-family: 'Inter', sans-serif;
+}
+
+.button {
+  border: 1px solid #9ACEEB;
+  background-color: #FFFFFF;
+  color: #4D89AE;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.button:hover:not(:disabled) {
+  background-color: #9ACEEB;
+  color: #FFFFFF;
+}
+
+.button.active {
+  background-color: #6FAFD6;
+  border-color: #6FAFD6;
+  color: #FFFFFF;
+  cursor: default;
+}
+
+.button:disabled {
+  background-color: #F7FBFE;
+  color: #cccccc;
+  cursor: not-allowed;
+  border-color: #e0e0e0;
+}
+
+.ellipsis {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  padding: 0 8px;
+  color: #6F7A83;
+}

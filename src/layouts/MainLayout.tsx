@@ -1,63 +1,57 @@
-import { Link, Outlet } from 'react-router-dom'
-import {
-  Navbar,
-  NavbarContainer,
-  NavbarItem,
-  NavbarMenu,
-  NavbarToggle,
-} from '../components/ui-kit'
-import { useAuth } from '../hooks/useAuth'
-import { isFullUser } from '../types/auth'
+import { Link, Outlet } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
+import { isFullUser } from '../types/auth';
+import styles from './MainLayout.module.css';
 
 export function MainLayout() {
-  const { user, isAuthenticated, logout } = useAuth()
+  const { user, isAuthenticated, logout } = useAuth();
 
-  const displayName = user
-    ? isFullUser(user)
-      ? `${user.first_name} ${user.last_name}`
-      : user.login
-    : null
+  // Формируем "Фамилия И.О."
+  const displayName = user && isFullUser(user)
+    ? `${user.last_name} ${user.first_name?.charAt(0)}.`
+    : user?.login;
 
   return (
-    <>
-      <Navbar>
-        <NavbarContainer>
-          <Link to="/" className="navbar__brand">
-            RPPR Hotels
-          </Link>
-          <NavbarToggle />
-          <NavbarMenu>
-            {isAuthenticated ? (
-              <>
-                <span className="navbar__item" style={{ cursor: 'default' }}>
-                  Привет, {displayName}
-                </span>
-                <NavbarItem
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    logout()
-                  }}
-                >
-                  Выйти
-                </NavbarItem>
-              </>
-            ) : (
-              <>
-                <Link to="/login" className="navbar__item">
-                  Вход
-                </Link>
-                <Link to="/register" className="navbar__item">
-                  Регистрация
-                </Link>
-              </>
-            )}
-          </NavbarMenu>
-        </NavbarContainer>
-      </Navbar>
-      <main>
+    <div className={styles.mainLayout}>
+      <header className={styles.header}>
+        <Link to="/" className={styles.brand}>
+          RPPR Hotels
+        </Link>
+        <nav className={styles.nav}>
+          {isAuthenticated ? (
+            <>
+              <span className={styles.userName}>
+                {displayName}
+              </span>
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  logout();
+                }}
+                className={styles.navLink}
+              >
+                Выйти
+              </a>
+            </>
+          ) : (
+            <>
+              <Link to="/login" className={styles.navLink}>
+                Вход
+              </Link>
+              <Link to="/register" className={styles.navLink}>
+                Регистрация
+              </Link>
+            </>
+          )}
+        </nav>
+      </header>
+      
+      <hr className={styles.separator} />
+
+      <main className={styles.content}>
         <Outlet />
       </main>
-    </>
-  )
+    </div>
+  );
 }

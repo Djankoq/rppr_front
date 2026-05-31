@@ -1,37 +1,31 @@
+export interface RegisterData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password?: string;
+  confirmPassword?: string;
+}
+
+export interface LoginData {
+  email: string;
+  password?: string;
+}
+
 export interface User {
-  id: number
-  first_name: string
-  last_name: string
-  login: string
-  is_manager: boolean
-  created_at: string
+  id: number;
+  login: string;
+  first_name?: string;
+  last_name?: string;
+  is_manager: boolean;
 }
 
-export interface UserCreate {
-  first_name: string
-  last_name: string
-  login: string
-  password: string
-  is_manager?: boolean
-}
+export type UserCreate = Omit<User, 'id'> & {
+  password?: string;
+};
 
-export interface TokenResponse {
-  access_token: string
-  token_type: string
-  refresh_token?: string | null
-}
+// Теперь AuthUser будет содержать все поля User, кроме id
+export type AuthUser = Omit<User, 'id'>;
 
-/** After login: only login + id; is_manager defaults to false (see AuthContext). */
-export interface AuthUserPartial {
-  id: number
-  login: string
-  first_name?: string
-  last_name?: string
-  is_manager: boolean
-}
-
-export type AuthUser = User | AuthUserPartial
-
-export function isFullUser(user: AuthUser): user is User {
-  return 'created_at' in user && 'first_name' in user && user.first_name !== undefined
+export function isFullUser(user: AuthUser | User): user is User {
+  return 'first_name' in user && user.first_name != null && 'last_name' in user && user.last_name != null;
 }

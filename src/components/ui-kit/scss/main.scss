@@ -1,10 +1,10 @@
-@import 'variables';
-@import 'base';
+@use 'variables';
+@use 'base';
 
 // Components
-@import 'components/buttons';
-@import 'components/inputs';
-@import 'components/dropdowns';
-@import 'components/checkboxes-radios';
-@import 'components/cards';
-@import 'components/navbar';
+@use 'components/buttons';
+@use 'components/inputs';
+@use 'components/dropdowns';
+@use 'components/checkboxes-radios';
+@use 'components/cards';
+@use 'components/navbar';
