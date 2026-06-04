@@ -2,10 +2,15 @@
   padding: 40px 60px;
   background: #F7FBFE;
   min-height: 100vh;
+  /* Центрируем контент */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .block {
   max-width: 900px;
+  width: 100%; /* Растягиваем на всю доступную ширину */
   padding: 30px;
   background: #FFFFFF;
   border: 1px solid #9ACEEB;

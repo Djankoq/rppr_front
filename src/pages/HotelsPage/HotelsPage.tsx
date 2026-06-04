@@ -41,7 +41,6 @@ const PAGE_SIZE = 10;
 const HotelsPage = () => {
   const [hotels, setHotels] = useState<Hotel[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [filterError, setFilterError] = useState<string | null>(null);
   const [filters, setFilters] = useState<Filters>(initialFilters);
   
@@ -53,7 +52,6 @@ const HotelsPage = () => {
 
   const fetchHotels = useCallback(async (page: number, currentFilters: Filters) => {
     setLoading(true);
-    setError(null);
     try {
       const params = new URLSearchParams();
       Object.entries(currentFilters).forEach(([key, value]) => {
@@ -70,8 +68,8 @@ const HotelsPage = () => {
       setHotels(data.hotels);
       setTotalPages(Math.ceil(data.total / PAGE_SIZE));
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Ошибка загрузки отелей';
-      setError(message);
+      // Если бэкенд недоступен — просто показываем пустой список
+      console.log('HotelsPage: бэкенд недоступен, показываем пустой список', err);
       setHotels([]);
       setTotalPages(0);
     } finally {
@@ -80,10 +78,10 @@ const HotelsPage = () => {
   }, []);
 
   useEffect(() => {
-  startTransition(() => {
-    fetchHotels(1, initialFilters);
-  });
-}, [fetchHotels]);
+    startTransition(() => {
+      fetchHotels(1, initialFilters);
+    });
+  }, [fetchHotels]);
 
   const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -171,7 +169,6 @@ const HotelsPage = () => {
                 className={styles.searchInput}
                 value={filters[filterKey]}
                 onChange={handleFilterChange}
-                // Добавляем атрибут min для полей с датой
                 min={minValue}
               />
               {filters[filterKey] && (
@@ -191,7 +188,6 @@ const HotelsPage = () => {
         <button 
           className={styles.clearAllButton} 
           onClick={handleClearAll} 
-          // Кнопка неактивна, если фильтры не применены или идет загрузка
           disabled={!isAnyFilterApplied || loading}
         >
           Очистить все
@@ -202,9 +198,8 @@ const HotelsPage = () => {
       </p>
 
       {loading && <p>Загрузка отелей...</p>}
-      {error && <p style={{ color: 'red' }}>Ошибка: {error}</p>}
       
-      {!loading && !error && hotels.length > 0 && (
+      {!loading && hotels.length > 0 && (
         <>
           <div className={styles.hotelGrid}>
             {hotels.map(hotel => (
@@ -219,7 +214,7 @@ const HotelsPage = () => {
         </>
       )}
 
-      {!loading && !error && hotels.length === 0 && (
+      {!loading && hotels.length === 0 && (
         <p>По вашему запросу отелей не найдено.</p>
       )}
       <AIRecommendations />

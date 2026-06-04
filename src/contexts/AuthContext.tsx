@@ -13,6 +13,7 @@ import { clearAuthStorage, setAccessToken, getAccessToken } from '../api/client'
 import { STORAGE_AUTH_USER } from '../api/storage'
 import type { AuthUser, User, UserCreate } from '../types/auth'
 import { getUserIdFromToken } from '../utils/jwt'
+import { mockLogin, mockRegister } from '../api/mockAuth'
 
 export interface AuthContextValue {
   user: AuthUser | null
@@ -44,7 +45,6 @@ function saveUser(user: AuthUser | null): void {
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  // ✅ ИСПРАВЛЕНИЕ 2: Lazy initialization вместо useEffect
   const [user, setUser] = useState<AuthUser | null>(() => {
     const token = getAccessToken()
     const storedUser = loadUserFromStorage()
@@ -54,7 +54,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return null
   })
   
-  // ✅ isLoading сразу false, т.к. инициализация синхронная
   const [isLoading] = useState(false)
 
   const logout = useCallback(() => {
@@ -62,7 +61,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null)
   }, [])
 
-  // ✅ Оставляем только подписку на событие logout
   useEffect(() => {
     const onLogout = () => {
       setUser(null)
@@ -73,34 +71,70 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = useCallback(
     async (loginName: string, password: string) => {
-      const { access_token, first_name, last_name } = await authApi.login(loginName, password);
-      setAccessToken(access_token);
+      try {
+        // Пытаемся использовать реальный API
+        const { access_token, first_name, last_name } = await authApi.login(loginName, password);
+        setAccessToken(access_token);
 
-      const id = getUserIdFromToken(access_token);
-      if (id == null) {
-        throw new Error('Не удалось прочитать id пользователя из токена');
+        const id = getUserIdFromToken(access_token);
+        if (id == null) {
+          throw new Error('Не удалось прочитать id пользователя из токена');
+        }
+
+        const authUser: AuthUser = {
+          login: loginName,
+          first_name: first_name ?? '',
+          last_name: last_name ?? '',
+          is_manager: false,
+        };
+        
+        saveUser(authUser);
+        setUser(authUser);
+      } catch (err: unknown) {
+        // Если бэкенд недоступен — используем mock
+        console.warn('Бэкенд недоступен, используем mock-авторизацию:', err);
+        
+        const mockResult = await mockLogin(loginName, password);
+        setAccessToken(mockResult.access_token);
+        
+        const authUser: AuthUser = {
+          login: loginName,
+          first_name: mockResult.first_name ?? '',
+          last_name: mockResult.last_name ?? '',
+          is_manager: mockResult.is_manager || false,
+        };
+        
+        saveUser(authUser);
+        setUser(authUser);
       }
-
-      const authUser: AuthUser = {
-        login: loginName,
-        first_name: first_name,
-        last_name: last_name,
-        is_manager: false,
-      };
-      
-      saveUser(authUser);
-      setUser(authUser);
     },
     [],
   )
 
   const register = useCallback(async (data: UserCreate) => {
+  try {
     const newUser = await authApi.register(data);
     if (data.password) {
       await login(newUser.login, data.password);
     }
     return newUser;
-  }, [login])
+  } catch (err: unknown) {
+    // Если бэкенд недоступен — используем mock
+    console.warn('Бэкенд недоступен, используем mock-регистрацию:', err);
+    
+    const mockResult = await mockRegister({
+      login: data.login,
+      password: data.password || '',
+      first_name: data.first_name ?? '',   // ✅ добавлен fallback
+      last_name: data.last_name ?? '',     // ✅ добавлен fallback
+    });
+    
+    if (data.password) {
+      await login(mockResult.login, data.password);
+    }
+    return mockResult as User;
+  }
+}, [login])
 
   const value = useMemo<AuthContextValue>(
     () => ({

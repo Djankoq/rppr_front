@@ -8,6 +8,18 @@ import { AddHotelForm } from './pages/admin/AddHotelForm'
 import { AddRoomForm } from './pages/admin/AddRoomForm'
 import { BookingHistory } from './pages/profile/BookingHistory'
 import { BookingDetails } from './pages/BookingDetails'
+import { useAuth } from './hooks/useAuth'
+
+// Компонент для защиты маршрутов (inline)
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated } = useAuth()
+  
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />
+  }
+  
+  return <>{children}</>
+}
 
 function App() {
   return (
@@ -16,14 +28,34 @@ function App() {
         <Route element={<MainLayout />}>
           <Route index element={<HotelsPage />} />
           
-          {/* 👇 BOO-35: Интерфейс управляющего */}
-          <Route path="/admin/bookings" element={<BookingsTable />} />
-          <Route path="/admin/add-hotel" element={<AddHotelForm />} />
-          <Route path="/admin/hotels/:hotelId/add-room" element={<AddRoomForm />} />
+          {/* BOO-35: Интерфейс управляющего (ЗАЩИЩЕНО) */}
+          <Route path="/admin/bookings" element={
+            <ProtectedRoute>
+              <BookingsTable />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/add-hotel" element={
+            <ProtectedRoute>
+              <AddHotelForm />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/hotels/:hotelId/add-room" element={
+            <ProtectedRoute>
+              <AddRoomForm />
+            </ProtectedRoute>
+          } />
           
-          {/* 👇 BOO-34: Оформление бронирования и ЛК */}
-          <Route path="/profile/bookings" element={<BookingHistory />} />
-          <Route path="/booking/:id" element={<BookingDetails />} />
+          {/* BOO-34: Оформление бронирования и ЛК (ЗАЩИЩЕНО) */}
+          <Route path="/profile/bookings" element={
+            <ProtectedRoute>
+              <BookingHistory />
+            </ProtectedRoute>
+          } />
+          <Route path="/booking/:id" element={
+            <ProtectedRoute>
+              <BookingDetails />
+            </ProtectedRoute>
+          } />
         </Route>
 
         <Route element={<AuthLayout />}>
