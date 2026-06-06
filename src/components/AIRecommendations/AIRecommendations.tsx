@@ -1,6 +1,4 @@
-import { useEffect, useState } from 'react';
-import { apiClient } from '../../api/client';
-import HotelCard from '../HotelCard/HotelCard';
+import React, { useState, useEffect } from 'react';
 import styles from './AIRecommendations.module.css';
 
 interface Hotel {
@@ -12,63 +10,81 @@ interface Hotel {
   rooms: { price_per_night: string }[];
 }
 
-export const AIRecommendations = () => {
-  const [hotels, setHotels] = useState<Hotel[]>([]);
+interface AIRecommendationsProps {
+  hotels: Hotel[];
+  userPreferences?: {
+    budget?: number;
+    location?: string;
+  };
+}
+
+const AIRecommendations: React.FC<AIRecommendationsProps> = ({ hotels, userPreferences }) => {
+  const [recommendations, setRecommendations] = useState<Hotel[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let isMounted = true;
-
-    const fetchRecommendations = async () => {
-      try {
-        setLoading(true);
-        const response = await apiClient.get('/ai/recommendations');
-        
-        if (!isMounted) return;
-
-        // Обрабатываем разную структуру ответа
-        if (Array.isArray(response.data)) {
-          setHotels(response.data);
-        } else if (response.data?.hotels && Array.isArray(response.data.hotels)) {
-          setHotels(response.data.hotels);
-        } else if (response.data?.data && Array.isArray(response.data.data)) {
-          setHotels(response.data.data);
-        } else {
-          console.warn('AI Recommendations: неожиданный формат данных', response.data);
-          setHotels([]);
-        }
-      } catch (err: unknown) {
-        if (!isMounted) return;
-        const message = err instanceof Error ? err.message : 'Ошибка загрузки рекомендаций';
-        console.log('AI Recommendations:', message);
-        setHotels([]);
-      } finally {
-        if (isMounted) setLoading(false);
+    // Имитация AI-рекомендаций
+    const generateRecommendations = () => {
+      setLoading(true);
+      
+      // Сортируем отели по релевантности (простая логика)
+      let sorted = [...hotels];
+      
+      if (userPreferences?.budget) {
+        sorted = sorted.filter(hotel => {
+          const minPrice = Math.min(...hotel.rooms.map(r => parseFloat(r.price_per_night)));
+          return minPrice <= userPreferences.budget!;
+        });
       }
+      
+      // Берем топ-3 рекомендации
+      setRecommendations(sorted.slice(0, 3));
+      setLoading(false);
     };
 
-    fetchRecommendations();
+    generateRecommendations();
+  }, [hotels, userPreferences]);
 
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  if (loading) {
+    return (
+      <div className={styles.container}>
+        <h3 className={styles.title}>🤖 AI Рекомендации</h3>
+        <p className={styles.loading}>Анализируем отели для вас...</p>
+      </div>
+    );
+  }
 
-  // Если нет данных — не рендерим ничего
-  if (loading || hotels.length === 0) {
+  if (recommendations.length === 0) {
     return null;
   }
 
   return (
-    <div className={styles.wrapper}>
-      <h2 className={styles.title}>Рекомендации на основе ваших предпочтений</h2>
-      <div className={styles.carousel}>
-        {hotels.slice(0, 6).map(hotel => (
-          <div key={hotel.id} className={styles.cardWrapper}>
-            <HotelCard hotel={hotel} />
-          </div>
-        ))}
+    <div className={styles.container}>
+      <h3 className={styles.title}>🤖 Подобрано для вас</h3>
+      <div className={styles.recommendations}>
+        {recommendations.map(hotel => {
+          const minPrice = Math.min(...hotel.rooms.map(r => parseFloat(r.price_per_night)));
+          return (
+            <div key={hotel.id} className={styles.recommendation}>
+              <img 
+                src={hotel.image_url} 
+                alt={hotel.name}
+                className={styles.image}
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = `https://via.placeholder.com/150x100?text=${encodeURIComponent(hotel.name)}`;
+                }}
+              />
+              <div className={styles.info}>
+                <h4 className={styles.name}>{hotel.name}</h4>
+                <p className={styles.location}>{hotel.location}</p>
+                <p className={styles.price}>от {Math.round(minPrice)} ₽/ночь</p>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
 };
+
+export default AIRecommendations;

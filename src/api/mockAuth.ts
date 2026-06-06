@@ -1,4 +1,4 @@
-// Mock данные для демонстрации без бэкенда
+// Mock-данные для авторизации, если бэкенд недоступен
 interface MockUser {
   login: string;
   password: string;
@@ -19,12 +19,12 @@ const MOCK_USERS: MockUser[] = [
     login: 'admin@example.com',
     password: 'admin123',
     first_name: 'Админ',
-    last_name: 'Системы',
+    last_name: 'Системов',
     is_manager: true,
   },
 ];
 
-// ✅ Правильная кодировка UTF-8 → Base64 (поддерживает кириллицу)
+// Утилита для корректного кодирования UTF-8 в Base64 (для JWT с кириллицей)
 const utf8ToBase64 = (str: string): string => {
   return btoa(
     new Uint8Array(new TextEncoder().encode(str))
@@ -32,7 +32,7 @@ const utf8ToBase64 = (str: string): string => {
   );
 };
 
-// Генерируем фейковый JWT-токен
+// Генерация mock JWT-токена
 const generateMockToken = (user: MockUser): string => {
   const header = utf8ToBase64(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
   const payload = utf8ToBase64(JSON.stringify({ 
@@ -75,7 +75,7 @@ export const mockRegister = async (data: {
 }) => {
   await new Promise(resolve => setTimeout(resolve, 500));
 
-  // Проверяем, нет ли такого пользователя
+  // Проверка, что логин не занят
   if (MOCK_USERS.find(u => u.login === data.login)) {
     throw new Error('Login already exists');
   }

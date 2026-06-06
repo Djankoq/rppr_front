@@ -1,107 +1,168 @@
-.page {
-  padding: 40px 60px;
-  background: #F7FBFE;
-  min-height: 100vh;
-  /* Центрируем контент */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.title {
+  font-size: 28px;
+  margin-bottom: 30px;
+  color: #2F353B;
+}
+
+.loading,
+.error,
+.empty {
+  text-align: center;
+  padding: 40px;
+  font-size: 16px;
+}
+
+.error {
+  color: #dc3545;
+}
+
+.empty {
+  color: #6F7A83;
+}
+
+.bookings {
   display: flex;
   flex-direction: column;
+  gap: 20px;
+}
+
+.booking {
+  background: white;
+  border: 2px solid #9ACEEB;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #9ACEEB;
 }
 
-.block {
-  max-width: 900px;
-  width: 100%; /* Растягиваем на всю доступную ширину */
-  padding: 30px;
-  background: #FFFFFF;
-  border: 1px solid #9ACEEB;
-  border-radius: 4px;
-  margin-bottom: 30px;
+.hotelName {
+  font-size: 20px;
+  margin: 0;
+  color: #4D89AE;
 }
 
-.blockTitle {
-  font-size: 24px;
-  color: #2F353B;
-  margin: 0 0 20px 0;
-  font-weight: 400;
+.status {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
 }
 
-.userData p {
+.statusConfirmed {
+  background: #d4edda;
+  color: #155724;
+}
+
+.statusCancelled {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.statusCompleted {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+.details {
+  margin-bottom: 15px;
+}
+
+.details p {
   margin: 8px 0;
   font-size: 14px;
   color: #2F353B;
 }
 
-.list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+.details strong {
+  color: #4D89AE;
 }
 
-.bookingCard {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px;
-  border: 1px solid #9ACEEB;
-  border-radius: 4px;
-  background: #FFFFFF;
-}
-
-.bookingInfo {
-  flex: 1;
-}
-
-.hotelName {
-  font-size: 16px;
-  color: #2F353B;
-  margin-bottom: 6px;
-}
-
-.bookingInfo > div {
-  font-size: 13px;
-  color: #6F7A83;
-  margin-bottom: 4px;
-}
-
-.bookingPrice {
-  font-size: 20px;
-  color: #2F353B;
-  margin-right: 20px;
-}
-
-.cancelBtn {
-  padding: 10px 20px;
-  background: #9ACEEB;
-  color: #2F353B;
+.cancelButton {
+  background: #dc3545;
+  color: white;
   border: none;
-  border-radius: 4px;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s;
+}
+
+.cancelButton:hover {
+  background: #c82333;
+}
+
+/* Модальное окно */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+}
+
+.modalContent h3 {
+  margin: 0 0 15px 0;
+  color: #2F353B;
+}
+
+.modalContent p {
+  margin: 0 0 25px 0;
+  color: #6F7A83;
+}
+
+.modalActions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.confirmButton {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
   cursor: pointer;
   font-size: 14px;
 }
 
-.cancelBtn:hover:not(:disabled) {
-  background: #6FAFD6;
+.confirmButton:hover {
+  background: #c82333;
 }
 
-.cancelBtn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+.modalActions .cancelButton {
+  background: #6c757d;
 }
 
-.empty, .loading {
-  text-align: center;
-  color: #6F7A83;
-  padding: 40px;
-}
-
-.homeLink {
-  display: inline-block;
-  margin-top: 10px;
-  color: #4D89AE;
-  text-decoration: none;
-  font-size: 14px;
-}
-
-.homeLink:hover {
-  text-decoration: underline;
+.modalActions .cancelButton:hover {
+  background: #5a6268;
 }

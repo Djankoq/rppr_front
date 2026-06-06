@@ -28,10 +28,10 @@ export const BookingDetails = () => {
   }, [id, navigate]);
 
   const handleConfirm = async () => {
-    if (!booking || !confirm('Подтвердить бронирование?')) return;
+    if (!booking || !confirm('Подтвердить это бронирование?')) return;
     try {
       await apiClient.post(`/bookings/${booking.id}/confirm`);
-      alert('Заказ подтвержден!');
+      alert('Бронирование подтверждено!');
       navigate('/profile/bookings');
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Ошибка подтверждения';
@@ -57,11 +57,11 @@ export const BookingDetails = () => {
           <span className={styles.label}>Статус:</span>
           <span className={`${styles.badge} ${styles[booking.status]}`}>
             {booking.status === 'confirmed' ? 'Подтверждено' :
-             booking.status === 'cancelled' ? 'Отменено' : 'Ожидание'}
+             booking.status === 'cancelled' ? 'Отменено' : 'Ожидает'}
           </span>
         </div>
         <div className={styles.infoRow}>
-          <span className={styles.label}>Даты:</span>
+          <span className={styles.label}>Заезд:</span>
           <span>{new Date(booking.date_from).toLocaleDateString()} — {new Date(booking.date_to).toLocaleDateString()}</span>
         </div>
         <div className={styles.infoRow}>
@@ -71,7 +71,7 @@ export const BookingDetails = () => {
 
         {booking.status === 'pending' && (
           <button className={styles.confirmBtn} onClick={handleConfirm}>
-            Подтвердить заказ
+            Подтвердить бронирование
           </button>
         )}
       </div>

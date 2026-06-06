@@ -20,7 +20,6 @@ const getAuthErrorMessage = (message?: string) => {
 };
 
 const AuthPage: React.FC<AuthPageProps> = ({ initialIsLogin }) => {
-  // ✅ ИСПРАВЛЕНИЕ: Используем initialIsLogin напрямую, без дополнительного состояния
   const isLogin = initialIsLogin;
   
   const [formData, setFormData] = useState({
@@ -37,7 +36,6 @@ const AuthPage: React.FC<AuthPageProps> = ({ initialIsLogin }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // ✅ ИСПРАВЛЕНИЕ: Убираем useEffect с setState, используем key на форме
   const formKey = `${isLogin}-${location.pathname}`;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -94,7 +92,6 @@ const AuthPage: React.FC<AuthPageProps> = ({ initialIsLogin }) => {
         navigate('/');
       }
     } catch (err: unknown) {
-      // ✅ ИСПРАВЛЕНИЕ: Заменяем any на unknown
       const message = err instanceof Error ? err.message : undefined;
       setError(getAuthErrorMessage(message));
       console.error(err);
@@ -110,7 +107,6 @@ const AuthPage: React.FC<AuthPageProps> = ({ initialIsLogin }) => {
 
         <h2 className={styles.title}>{isLogin ? 'Авторизация' : 'Регистрация'}</h2>
 
-        {/* ✅ ИСПРАВЛЕНИЕ: Добавляем key для автоматического сброса формы */}
         <form key={formKey} className={styles.authForm} onSubmit={handleSubmit} noValidate>
           <div className={styles.inputGroup}>
             <input
@@ -165,7 +161,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ initialIsLogin }) => {
                 className={styles.inputField}
                 type="password"
                 name="confirmPassword"
-                placeholder="Повторите Пароль"
+                placeholder="Повторите пароль"
                 value={formData.confirmPassword}
                 onChange={handleChange}
               />
@@ -188,7 +184,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ initialIsLogin }) => {
         <p className={styles.switchLink}>
           {isLogin ? 'Нет аккаунта? ' : 'Есть аккаунт? '}
           <Link to={isLogin ? '/register' : '/login'}>
-            {isLogin ? 'Зарегистрируйся' : 'Войдите'}
+            {isLogin ? 'Зарегистрироваться' : 'Войти'}
           </Link>
         </p>
 

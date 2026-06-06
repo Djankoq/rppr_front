@@ -28,7 +28,7 @@ export const BookingsTable = () => {
       await apiClient.put(`/admin/bookings/${id}/status`, { status: newStatus });
       setBookings(prev => prev.map(b => b.id === id ? { ...b, status: newStatus } : b));
     } catch {
-      alert('Не удалось изменить статус');
+      alert('Не удалось изменить статус бронирования');
     }
   };
 
@@ -47,15 +47,15 @@ export const BookingsTable = () => {
 
       <div className={styles.statsRow}>
         <div className={styles.statCard}>
-          <div className={styles.statLabel}>Всего броней</div>
+          <div className={styles.statLabel}>Всего бронирований</div>
           <div className={styles.statValue}>{total}</div>
         </div>
         <div className={styles.statCard}>
-          <div className={styles.statLabel}>Подтверждено</div>
+          <div className={styles.statLabel}>Подтвержденных</div>
           <div className={styles.statValue}>{confirmed}</div>
         </div>
         <div className={styles.statCard}>
-          <div className={styles.statLabel}>Отменено</div>
+          <div className={styles.statLabel}>Отмененных</div>
           <div className={styles.statValue}>{cancelled}</div>
         </div>
         <div className={styles.statCard}>
@@ -65,9 +65,9 @@ export const BookingsTable = () => {
       </div>
 
       <div className={styles.tableWrapper}>
-        <h2 className={styles.sectionTitle}>Управление бронированиями</h2>
+        <h2 className={styles.sectionTitle}>Список бронирований</h2>
         {bookings.length === 0 ? (
-          <p className={styles.empty}>Новых бронирований нет.</p>
+          <p className={styles.empty}>Бронирований пока нет.</p>
         ) : (
           <table className={styles.table}>
             <thead>
@@ -75,10 +75,10 @@ export const BookingsTable = () => {
                 <th>ID</th>
                 <th>Пользователь</th>
                 <th>Отель</th>
-                <th>Даты</th>
-                <th>Сумма</th>
+                <th>Заезд</th>
+                <th>Цена</th>
                 <th>Статус</th>
-                <th>Действие</th>
+                <th>Изменить статус</th>
               </tr>
             </thead>
             <tbody>
@@ -94,7 +94,7 @@ export const BookingsTable = () => {
                   <td>
                     <span className={`${styles.badge} ${styles[b.status]}`}>
                       {b.status === 'confirmed' ? 'Подтверждено' :
-                       b.status === 'cancelled' ? 'Отменено' : 'Ожидание'}
+                       b.status === 'cancelled' ? 'Отменено' : 'Ожидает'}
                     </span>
                   </td>
                   <td>
@@ -103,9 +103,9 @@ export const BookingsTable = () => {
                       value={b.status}
                       onChange={(e) => handleStatusChange(b.id, e.target.value)}
                     >
-                      <option value="pending">Ожидание</option>
-                      <option value="confirmed">Подтвердить</option>
-                      <option value="cancelled">Отменить</option>
+                      <option value="pending">Ожидает</option>
+                      <option value="confirmed">Подтверждено</option>
+                      <option value="cancelled">Отменено</option>
                     </select>
                   </td>
                 </tr>

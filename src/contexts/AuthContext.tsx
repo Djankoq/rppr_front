@@ -53,7 +53,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     return null
   })
-  
+
   const [isLoading] = useState(false)
 
   const logout = useCallback(() => {
@@ -72,69 +72,66 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = useCallback(
     async (loginName: string, password: string) => {
       try {
-        // Пытаемся использовать реальный API
-        const { access_token, first_name, last_name } = await authApi.login(loginName, password);
-        setAccessToken(access_token);
+        const response = await authApi.login(loginName, password)
+        setAccessToken(response.access_token)
 
-        const id = getUserIdFromToken(access_token);
+        const id = getUserIdFromToken(response.access_token)
         if (id == null) {
-          throw new Error('Не удалось прочитать id пользователя из токена');
+          throw new Error('Не удалось прочитать id пользователя из токена')
         }
 
         const authUser: AuthUser = {
           login: loginName,
-          first_name: first_name ?? '',
-          last_name: last_name ?? '',
-          is_manager: false,
-        };
-        
-        saveUser(authUser);
-        setUser(authUser);
+          first_name: response.first_name ?? '',
+          last_name: response.last_name ?? '',
+          is_manager: Boolean(response.is_manager),
+        }
+
+        saveUser(authUser)
+        setUser(authUser)
       } catch (err: unknown) {
-        // Если бэкенд недоступен — используем mock
-        console.warn('Бэкенд недоступен, используем mock-авторизацию:', err);
-        
-        const mockResult = await mockLogin(loginName, password);
-        setAccessToken(mockResult.access_token);
-        
+        console.warn('Ошибка бэкенда, используем mock-авторизацию:', err)
+
+        const mockResult = await mockLogin(loginName, password)
+        setAccessToken(mockResult.access_token)
+
         const authUser: AuthUser = {
           login: loginName,
           first_name: mockResult.first_name ?? '',
           last_name: mockResult.last_name ?? '',
           is_manager: mockResult.is_manager || false,
-        };
-        
-        saveUser(authUser);
-        setUser(authUser);
+        }
+
+        saveUser(authUser)
+        setUser(authUser)
       }
     },
     [],
   )
 
   const register = useCallback(async (data: UserCreate) => {
-  try {
-    const newUser = await authApi.register(data);
-    if (data.password) {
-      await login(newUser.login, data.password);
+    try {
+      const newUser = await authApi.register(data)
+      if (data.password) {
+        await login(newUser.login, data.password)
+      }
+      return newUser
+    } catch (err: unknown) {
+      console.warn('Ошибка бэкенда, используем mock-регистрацию:', err)
+
+      const mockResult = await mockRegister({
+        login: data.login,
+        password: data.password || '',
+        first_name: data.first_name ?? '',
+        last_name: data.last_name ?? '',
+      })
+
+      if (data.password) {
+        await login(mockResult.login, data.password)
+      }
+      return mockResult as User
     }
-    return newUser;
-  } catch (err: unknown) {
-    // Если бэкенд недоступен — используем mock
-    console.warn('Бэкенд недоступен, используем mock-регистрацию:', err);
-    
-    const mockResult = await mockRegister({
-      login: data.login,
-      password: data.password || '',
-      first_name: data.first_name ?? '',   // ✅ добавлен fallback
-      last_name: data.last_name ?? '',     // ✅ добавлен fallback
-    });
-    
-    if (data.password) {
-      await login(mockResult.login, data.password);
-    }
-    return mockResult as User;
-  }
-}, [login])
+  }, [login])
 
   const value = useMemo<AuthContextValue>(
     () => ({

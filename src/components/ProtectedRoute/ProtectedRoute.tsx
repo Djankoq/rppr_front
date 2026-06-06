@@ -1,36 +1,27 @@
-import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
+import { Navigate, useLocation } from 'react-router-dom'
+import { useAuth } from '../../hooks/useAuth'
+import type { ReactNode } from 'react'
 
 interface ProtectedRouteProps {
-  children: React.ReactNode;
+  children: ReactNode
+  requireManager?: boolean
 }
 
-export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const { isAuthenticated, isLoading } = useAuth();
-  const location = useLocation();
-
-  // 🔍 ОТЛАДКА — смотри в консоль браузера
-  console.log('🔒 ProtectedRoute:', { isAuthenticated, isLoading, path: location.pathname });
+export function ProtectedRoute({ children, requireManager = false }: ProtectedRouteProps) {
+  const { isAuthenticated, isLoading, user } = useAuth()
+  const location = useLocation()
 
   if (isLoading) {
-    return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        minHeight: '400px',
-        color: '#6F7A83'
-      }}>
-        Загрузка...
-      </div>
-    );
+    return <p>Загрузка…</p>
   }
 
   if (!isAuthenticated) {
-    console.log('🚫 Редирект на /login — пользователь не авторизован');
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return <Navigate to="/login" state={{ from: location }} replace />
   }
 
-  console.log('✅ Доступ разрешён');
-  return <>{children}</>;
-};
+  if (requireManager && !user?.is_manager) {
+    return <Navigate to="/" replace />
+  }
+
+  return <>{children}</>
+}

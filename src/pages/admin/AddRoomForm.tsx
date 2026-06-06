@@ -30,10 +30,10 @@ export const AddRoomForm = () => {
     setError(null);
     try {
       await apiClient.post('/admin/rooms', formData);
-      alert('Номер добавлен!');
+      alert('Номер успешно добавлен!');
       navigate('/admin/bookings');
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Ошибка при добавлении';
+      const message = err instanceof Error ? err.message : 'Ошибка при добавлении номера';
       setError(message);
     } finally {
       setLoading(false);
@@ -42,17 +42,17 @@ export const AddRoomForm = () => {
 
   return (
     <div className={styles.page}>
-      <h1 className={styles.title}>Добавить номер</h1>
+      <h1 className={styles.title}>Добавление номера</h1>
       <form onSubmit={handleSubmit} className={styles.form}>
         {error && <div className={styles.error}>{error}</div>}
 
         <div className={styles.group}>
           <label>Тип номера</label>
           <select name="room_type" value={formData.room_type} onChange={handleChange}>
-            <option value="standard">Стандарт</option>
+            <option value="standard">Стандартный</option>
             <option value="comfort">Комфорт</option>
-            <option value="deluxe">Люкс</option>
-            <option value="suite">Сьют</option>
+            <option value="deluxe">Делюкс</option>
+            <option value="suite">Люкс</option>
           </select>
         </div>
 

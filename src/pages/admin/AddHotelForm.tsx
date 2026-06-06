@@ -24,10 +24,10 @@ export const AddHotelForm = () => {
     setError(null);
     try {
       await apiClient.post('/admin/hotels', formData);
-      alert('Отель добавлен!');
+      alert('Отель успешно добавлен!');
       navigate('/admin/bookings');
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Ошибка при добавлении';
+      const message = err instanceof Error ? err.message : 'Ошибка при добавлении отеля';
       setError(message);
     } finally {
       setLoading(false);
@@ -36,7 +36,7 @@ export const AddHotelForm = () => {
 
   return (
     <div className={styles.page}>
-      <h1 className={styles.title}>Добавить новый отель</h1>
+      <h1 className={styles.title}>Добавление нового отеля</h1>
       <form onSubmit={handleSubmit} className={styles.form}>
         {error && <div className={styles.error}>{error}</div>}
 
@@ -56,7 +56,7 @@ export const AddHotelForm = () => {
         </div>
 
         <div className={styles.group}>
-          <label>URL картинки</label>
+          <label>URL изображения</label>
           <input name="image_url" value={formData.image_url} onChange={handleChange} placeholder="https://..." />
         </div>
 
@@ -65,7 +65,7 @@ export const AddHotelForm = () => {
             Отмена
           </button>
           <button type="submit" className={styles.btnPrimary} disabled={loading}>
-            {loading ? 'Сохранение...' : 'Сохранить'}
+            {loading ? 'Добавление...' : 'Добавить отель'}
           </button>
         </div>
       </form>

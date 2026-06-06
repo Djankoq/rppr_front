@@ -3,7 +3,6 @@ import styles from './HotelsPage.module.css';
 import HotelCard from '../../components/HotelCard/HotelCard';
 import Pagination from '../../components/Pagination/Pagination';
 import { getHotels } from '../../api/hotels';
-import { AIRecommendations } from '../../components/AIRecommendations/AIRecommendations';
 
 // Типы данных
 interface Hotel {
@@ -217,7 +216,6 @@ const HotelsPage = () => {
       {!loading && hotels.length === 0 && (
         <p>По вашему запросу отелей не найдено.</p>
       )}
-      <AIRecommendations />
     </div>
   );
 };
